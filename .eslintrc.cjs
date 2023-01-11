@@ -12,7 +12,6 @@ module.exports = {
     project: ['tsconfig.json']
   },
   rules: {
-    quotes: [2, 'single', { avoidEscape: true }],
-    '@typescript-eslint/explicit-function-return-type': 'off'
+    quotes: [2, 'single', { avoidEscape: true }]
   }
 }

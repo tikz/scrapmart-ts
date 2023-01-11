@@ -2,7 +2,7 @@ import puppeteer, { Browser, Page } from 'puppeteer'
 import path from 'path'
 import rewire from 'rewire'
 
-const mockUrl = (file: string) => `file://${path.dirname(expect.getState().testPath as string)}/mocks/${file}`
+const mockUrl = (file: string): string => `file://${path.dirname(expect.getState().testPath as string)}/mocks/${file}`
 
 const openBrowserPage = async (file: string): Promise<[Browser, Page]> => {
   const browser = await puppeteer.launch({ headless: true })
@@ -11,7 +11,7 @@ const openBrowserPage = async (file: string): Promise<[Browser, Page]> => {
   return [browser, page]
 }
 
-const runOnPage = async (file: string, func: Function) => {
+const runOnPage = async (file: string, func: Function): Promise<any> => {
   const [browser, page] = await openBrowserPage('product-normal.html')
   const data = await func(page)
   await browser.close()

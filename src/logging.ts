@@ -9,36 +9,34 @@ interface Progress {
   products: number
   totalProducts: number
 }
+const now = (): string => dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
-const now = () =>
-  dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-
-const formatProduct = (product: Product) =>
+const formatProduct = (product: Product): string =>
   `${chalk.gray(product.ean)} ${chalk.bold(product.name)}`
 
-const logTemplate = (message: string, colorFunc: ChalkInstance, market?: string) => {
+const logTemplate = (message: string, colorFunc: ChalkInstance, market?: string): void => {
   market !== undefined
     ? console.log(`${now()} ${formatMarket(market)} ${colorFunc(message)}`)
     : console.log(`${now()} ${colorFunc(message)}`)
 }
 
-export const logMessage = (message: string, market?: string) => {
+export const logMessage = (message: string, market?: string): void => {
   logTemplate(message, chalk.yellow, market)
 }
 
-export const logError = (message: any, market?: string) => {
+export const logError = (message: any, market?: string): void => {
   logTemplate(chalk.bold(message), chalk.red, market)
 }
 
-export const logStatus = (message: string, market?: string) => {
+export const logStatus = (message: string, market?: string): void => {
   logTemplate(message, chalk.cyan, market)
 }
 
-export const logProduct = (product: Product, market: string) => {
+export const logProduct = (product: Product, market: string): void => {
   console.log(`${now()} ${formatMarket(market)} ${formatProduct(product)}`)
 }
 
-const formatMarket = (market: string) => {
+const formatMarket = (market: string): string => {
   switch (market) {
     case 'Coto':
       return chalk.red('[Coto]')
@@ -49,7 +47,7 @@ const formatMarket = (market: string) => {
   }
 }
 
-export const statusReport = (progress: Progress, market: string) => {
+export const statusReport = (progress: Progress, market: string): NodeJS.Timer => {
   let lastProducts = 0
   const interval = 10000
 

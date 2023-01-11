@@ -10,7 +10,7 @@ const sequelize = new Sequelize({
   models: [Market, Product, Price, Category, ProductCategory]
 })
 
-const syncModels = async () => {
+const syncModels = async (): Promise<void> => {
   await sequelize.sync()
 }
 

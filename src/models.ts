@@ -84,7 +84,7 @@ export class ProductCategory extends Model {
 }
 
 export const store = async (market: Market, ean: number, name: string | null, url: string, imageUrl: string | null,
-  price: number, discountPrice: number, discountDetails: string | null, categories: string[]) => {
+  price: number, discountPrice: number, discountDetails: string | null, categories: string[]): Promise<void> => {
   const categoriesIds = []
   for (const name of categories) {
     const [category] = await Category.findOrCreate({

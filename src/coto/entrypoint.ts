@@ -8,7 +8,7 @@ import { Market } from '../models.js'
 export const marketName: string = 'Coto'
 export const baseUrl: string = 'https://www.cotodigital3.com.ar'
 
-const extractProductLinks = async (page: Page) => {
+const extractProductLinks = async (page: Page): Promise<string[]> => {
   const selector = 'div.product_info_container > a'
   const links = await page.evaluate((linkSelector) => {
     const links = Array.from(document.querySelectorAll(linkSelector))
@@ -18,12 +18,12 @@ const extractProductLinks = async (page: Page) => {
   return links.filter((link): link is string => typeof link === 'string')
 }
 
-const extractTotalProducts = async (page: Page) => {
+const extractTotalProducts = async (page: Page): Promise<number> => {
   const text = await extractFromElement(page, 'span#resultsCount', elementText)
   return Number(text)
 }
 
-export const start = async () => {
+export const start = async (): Promise<void> => {
   const [market] = await Market.findOrCreate({ where: { name: marketName }, defaults: { name: marketName } })
 
   logMessage('launching browser...', marketName)
