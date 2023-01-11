@@ -14,13 +14,9 @@ const syncModels = async () => {
   await sequelize.sync()
 }
 
-const main = async () => {
-  await start()
-}
-
 syncModels().then(() => {
   logMessage('DB sync success')
-  main().then(
+  start().then(
     () => { },
     (e) => { logError(e) }
   )

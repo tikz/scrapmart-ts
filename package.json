@@ -5,7 +5,7 @@
     "@supercharge/promise-pool": "^2.3.2",
     "chalk": "^5.2.0",
     "dayjs": "^1.11.7",
-    "puppeteer": "^19.4.1",
+    "puppeteer": "^19.5.0",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.28.0",
     "sequelize-typescript": "^2.1.5"
