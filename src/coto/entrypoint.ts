@@ -49,7 +49,7 @@ export const start = async () => {
 
     await PromisePool
       .for(productLinks)
-      .withConcurrency(3)
+      .withConcurrency(5)
       .process(async link => {
         await scrapProduct(browser, `${baseUrl}${link}`, market)
         progress.products++

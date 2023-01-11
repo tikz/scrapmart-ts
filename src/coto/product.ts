@@ -13,16 +13,14 @@ const extractPrice = async (page: Page) => {
   return text1 !== null ? parseNumber(text1) : parseNumber(text2)
 }
 
-const extractDiscountPrice = async (page: Page) => {
-  return parseNumber(await extractFromElement(page, 'span.price_discount', elementText))
-}
+const extractDiscountPrice = async (page: Page) =>
+  parseNumber(await extractFromElement(page, 'span.price_discount', elementText))
 
 const extractDiscountDetails = async (page: Page) =>
   await extractFromElement(page, 'span.text_price_discount', elementText)
 
-const extractEAN = async (page: Page) => {
-  return parseNumber(await extractFromElement(page, 'div#brandText > span:last-child', elementText))
-}
+const extractEAN = async (page: Page) =>
+  parseNumber(await extractFromElement(page, 'div#brandText > span:last-child', elementText))
 
 const extractImageURL = async (page: Page) =>
   await extractFromElement(page, 'img.zoomImg', elementAttrSrc)
