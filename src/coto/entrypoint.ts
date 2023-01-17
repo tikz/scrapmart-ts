@@ -1,4 +1,4 @@
-import puppeteer, { ElementHandle, Page } from 'puppeteer'
+import puppeteer, { ElementHandle, Page, Browser } from 'puppeteer'
 import { scrapProduct } from './product.js'
 import { PromisePool } from '@supercharge/promise-pool'
 import { logMessage, statusReport } from '../logging.js'
@@ -23,14 +23,16 @@ const extractTotalProducts = async (page: Page): Promise<number> => {
   return Number(text)
 }
 
+const launchBrowser = async (): Promise<Browser> =>
+  await puppeteer.launch({ executablePath: '/usr/bin/firefox', product: 'firefox', headless: false })
+
 export const start = async (): Promise<void> => {
   const [market] = await Market.findOrCreate({ where: { name: marketName }, defaults: { name: marketName } })
 
-  logMessage('launching browser...', marketName)
-  const browser = await puppeteer.launch({ executablePath: '/usr/bin/firefox', product: 'firefox', headless: false })
-  const page = await browser.newPage()
+  let browser = await launchBrowser()
+  let page = await browser.newPage()
+
   page.setDefaultNavigationTimeout(0)
-  logMessage('browser launched', marketName)
 
   logMessage('loading entrypoint page...', marketName)
   await page.goto(`${baseURL}/sitios/cdigi/browse`)
@@ -60,6 +62,9 @@ export const start = async (): Promise<void> => {
 
     if (nextButtonURL !== null) {
       logMessage('next page...', marketName)
+      await browser.close()
+      browser = await launchBrowser()
+      page = await browser.newPage()
       await page.goto(`${baseURL}${nextButtonURL}}`)
     } else {
       hasNextButton = false
