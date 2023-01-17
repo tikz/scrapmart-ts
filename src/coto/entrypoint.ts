@@ -6,7 +6,7 @@ import { elementText, extractFromElement } from '../parse.js'
 import { Market } from '../models.js'
 
 export const marketName: string = 'Coto'
-export const baseUrl: string = 'https://www.cotodigital3.com.ar'
+export const baseURL: string = 'https://www.cotodigital3.com.ar'
 
 const extractProductLinks = async (page: Page): Promise<string[]> => {
   const selector = 'div.product_info_container > a'
@@ -27,13 +27,13 @@ export const start = async (): Promise<void> => {
   const [market] = await Market.findOrCreate({ where: { name: marketName }, defaults: { name: marketName } })
 
   logMessage('launching browser...', marketName)
-  const browser = await puppeteer.launch({ headless: true })
+  const browser = await puppeteer.launch({ executablePath: '/usr/bin/firefox', product: 'firefox', headless: false })
   const page = await browser.newPage()
   page.setDefaultNavigationTimeout(0)
   logMessage('browser launched', marketName)
 
   logMessage('loading entrypoint page...', marketName)
-  await page.goto(`${baseUrl}/sitios/cdigi/browse`)
+  await page.goto(`${baseURL}/sitios/cdigi/browse`)
   logMessage('page loaded', marketName)
 
   const totalProducts = await extractTotalProducts(page)
@@ -51,15 +51,17 @@ export const start = async (): Promise<void> => {
       .for(productLinks)
       .withConcurrency(5)
       .process(async link => {
-        await scrapProduct(browser, `${baseUrl}${link}`, market)
+        await scrapProduct(browser, `${baseURL}${link}`, market)
         progress.products++
       })
 
-    try {
-      const nextButton = (await page.$x('//ul[@id="atg_store_pagination"]/li/a[contains(text(), "Sig")]'))[0] as ElementHandle
+    const nextButton = (await page.$x('//ul[@id="atg_store_pagination"]/li/a[contains(text(), "Sig")]'))[0] as ElementHandle
+    const nextButtonURL = await page.evaluate((button) => button.getAttribute('href'), nextButton)
+
+    if (nextButtonURL !== null) {
       logMessage('next page...', marketName)
-      await nextButton.click()
-    } catch (e) {
+      await page.goto(`${baseURL}${nextButtonURL}}`)
+    } else {
       hasNextButton = false
       logMessage('finished!', marketName)
     }
